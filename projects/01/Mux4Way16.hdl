@@ -16,5 +16,96 @@ CHIP Mux4Way16 {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    Not     (in=sel[0], out=notsel0);
+    Not     (in=sel[1], out=notsel1);
+
+    And     (a=notsel0, b=notsel1, out=sela);
+    And     (a=sel[0], b=notsel1, out=selb);
+    And     (a=notsel0, b=sel[1], out=selc);
+    And     (a=sel[0], b=sel[1], out=seld);
+
+    And     (a=sela, b=a[0],  out=outa0);
+    And     (a=sela, b=a[1],  out=outa1);
+    And     (a=sela, b=a[2],  out=outa2);
+    And     (a=sela, b=a[3],  out=outa3);
+    And     (a=sela, b=a[4],  out=outa4);
+    And     (a=sela, b=a[5],  out=outa5);
+    And     (a=sela, b=a[6],  out=outa6);
+    And     (a=sela, b=a[7],  out=outa7);
+    And     (a=sela, b=a[8],  out=outa8);
+    And     (a=sela, b=a[9],  out=outa9);
+    And     (a=sela, b=a[10], out=outa10);
+    And     (a=sela, b=a[11], out=outa11);
+    And     (a=sela, b=a[12], out=outa12);
+    And     (a=sela, b=a[13], out=outa13);
+    And     (a=sela, b=a[14], out=outa14);
+    And     (a=sela, b=a[15], out=outa15);
+
+    And     (a=selb, b=b[0],  out=outb0);
+    And     (a=selb, b=b[1],  out=outb1);
+    And     (a=selb, b=b[2],  out=outb2);
+    And     (a=selb, b=b[3],  out=outb3);
+    And     (a=selb, b=b[4],  out=outb4);
+    And     (a=selb, b=b[5],  out=outb5);
+    And     (a=selb, b=b[6],  out=outb6);
+    And     (a=selb, b=b[7],  out=outb7);
+    And     (a=selb, b=b[8],  out=outb8);
+    And     (a=selb, b=b[9],  out=outb9);
+    And     (a=selb, b=b[10], out=outb10);
+    And     (a=selb, b=b[11], out=outb11);
+    And     (a=selb, b=b[12], out=outb12);
+    And     (a=selb, b=b[13], out=outb13);
+    And     (a=selb, b=b[14], out=outb14);
+    And     (a=selb, b=b[15], out=outb15);
+
+    And     (a=selc, b=c[0],  out=outc0);
+    And     (a=selc, b=c[1],  out=outc1);
+    And     (a=selc, b=c[2],  out=outc2);
+    And     (a=selc, b=c[3],  out=outc3);
+    And     (a=selc, b=c[4],  out=outc4);
+    And     (a=selc, b=c[5],  out=outc5);
+    And     (a=selc, b=c[6],  out=outc6);
+    And     (a=selc, b=c[7],  out=outc7);
+    And     (a=selc, b=c[8],  out=outc8);
+    And     (a=selc, b=c[9],  out=outc9);
+    And     (a=selc, b=c[10], out=outc10);
+    And     (a=selc, b=c[11], out=outc11);
+    And     (a=selc, b=c[12], out=outc12);
+    And     (a=selc, b=c[13], out=outc13);
+    And     (a=selc, b=c[14], out=outc14);
+    And     (a=selc, b=c[15], out=outc15);
+
+    And     (a=seld, b=d[0],  out=outd0);
+    And     (a=seld, b=d[1],  out=outd1);
+    And     (a=seld, b=d[2],  out=outd2);
+    And     (a=seld, b=d[3],  out=outd3);
+    And     (a=seld, b=d[4],  out=outd4);
+    And     (a=seld, b=d[5],  out=outd5);
+    And     (a=seld, b=d[6],  out=outd6);
+    And     (a=seld, b=d[7],  out=outd7);
+    And     (a=seld, b=d[8],  out=outd8);
+    And     (a=seld, b=d[9],  out=outd9);
+    And     (a=seld, b=d[10], out=outd10);
+    And     (a=seld, b=d[11], out=outd11);
+    And     (a=seld, b=d[12], out=outd12);
+    And     (a=seld, b=d[13], out=outd13);
+    And     (a=seld, b=d[14], out=outd14);
+    And     (a=seld, b=d[15], out=outd15);
+
+    Or8Way  (in[0]=outa0,  in[1]=outb0,  in[2]=outc0,  in[3]=outd0,  out=out[0]);
+    Or8Way  (in[0]=outa1,  in[1]=outb1,  in[2]=outc1,  in[3]=outd1,  out=out[1]);
+    Or8Way  (in[0]=outa2,  in[1]=outb2,  in[2]=outc2,  in[3]=outd2,  out=out[2]);
+    Or8Way  (in[0]=outa3,  in[1]=outb3,  in[2]=outc3,  in[3]=outd3,  out=out[3]);
+    Or8Way  (in[0]=outa4,  in[1]=outb4,  in[2]=outc4,  in[3]=outd4,  out=out[4]);
+    Or8Way  (in[0]=outa5,  in[1]=outb5,  in[2]=outc5,  in[3]=outd5,  out=out[5]);
+    Or8Way  (in[0]=outa6,  in[1]=outb6,  in[2]=outc6,  in[3]=outd6,  out=out[6]);
+    Or8Way  (in[0]=outa7,  in[1]=outb7,  in[2]=outc7,  in[3]=outd7,  out=out[7]);
+    Or8Way  (in[0]=outa8,  in[1]=outb8,  in[2]=outc8,  in[3]=outd8,  out=out[8]);
+    Or8Way  (in[0]=outa9,  in[1]=outb9,  in[2]=outc9,  in[3]=outd9,  out=out[9]);
+    Or8Way  (in[0]=outa10, in[1]=outb10, in[2]=outc10, in[3]=outd10, out=out[10]);
+    Or8Way  (in[0]=outa11, in[1]=outb11, in[2]=outc11, in[3]=outd11, out=out[11]);
+    Or8Way  (in[0]=outa12, in[1]=outb12, in[2]=outc12, in[3]=outd12, out=out[12]);
+    Or8Way  (in[0]=outa13, in[1]=outb13, in[2]=outc13, in[3]=outd13, out=out[13]);
+    Or8Way  (in[0]=outa14, in[1]=outb14, in[2]=outc14, in[3]=outd14, out=out[14]);
+    Or8Way  (in[0]=outa15, in[1]=outb15, in[2]=outc15, in[3]=outd15, out=out[15]);
 }

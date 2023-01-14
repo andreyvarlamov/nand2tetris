@@ -14,5 +14,7 @@ CHIP Bit {
     OUT out;
 
     PARTS:
-    // Put your code here:
+    Mux (a=ff, b=in, sel=load, out=selin);
+    DFF (in=selin, out=ff);
+    Or  (a=ff, out=out);
 }

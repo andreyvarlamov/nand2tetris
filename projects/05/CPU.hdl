@@ -34,10 +34,68 @@ CHIP CPU {
                          // the current program (reset==0).
 
     OUT outM[16],        // M value output
-        writeM,          // Write to M? 
+        writeM,          // Write to M?
         addressM[15],    // Address in data memory (of M)
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    Or          (a=instruction[15],    b=false, out=opcode);
+
+    // instruction[6..12] - C-Instruction Computation
+    And         (a=instruction[12], b=opcode, out=selMem);
+    And         (a=instruction[11], b=opcode, out=aluZX);
+    And         (a=instruction[10], b=opcode, out=aluNX);
+    And         (a=instruction[9],  b=opcode, out=aluZY);
+    And         (a=instruction[8],  b=opcode, out=aluNY);
+    And         (a=instruction[7],  b=opcode, out=aluF);
+    And         (a=instruction[6],  b=opcode, out=aluNO);
+
+    // instruction[3..5] - C-Instruction Destination
+    And         (a=instruction[5], b=opcode, out=destA);
+    And         (a=instruction[4], b=opcode, out=destD);
+    And         (a=instruction[3], b=opcode, out=destM);
+
+    // instruction[0..2] - C-Instruction Jump
+    And         (a=instruction[2], b=opcode, out=jumpLT);
+    And         (a=instruction[1], b=opcode, out=jumpEQ);
+    And         (a=instruction[0], b=opcode, out=jumpGT);
+
+    // If a-inst, feed adata into addr reg, if c-inst, feed aluOut into addr reg
+    Not         (in=opcode, out=aInst);
+    // instruction[0..14] - A-Instruction Data
+    Mux16       (a=aluOut, b[0..14]=instruction[0..14], sel=aInst, out=addrIn);
+    // Load addr reg either if it's a-inst, or it's a c-inst with destA
+    Or          (a=aInst, b=destA, out=loadAddr);
+    ARegister    (in=addrIn, load=loadAddr, out=addrOut);
+    DRegister    (in=aluOut, load=destD, out=aluX);
+    // Feed either addr reg or mem into aluY
+    Mux16       (a=addrOut, b=inM, sel=selMem, out=aluY);
+
+    ALU         (x=aluX,
+                 y=aluY,
+
+                 zx=aluZX,
+                 nx=aluNX,
+                 zy=aluZY,
+                 ny=aluNY,
+                 f=aluF,
+                 no=aluNO,
+
+                 out=aluOut,
+                 zr=aluZR,
+                 ng=aluNG);
+
+
+    Not         (in=aluZR, out=notZR);
+    Not         (in=aluNG, out=notNG);
+    And         (a=notZR, b=notNG, out=aluPS);
+    And         (a=jumpLT, b=aluNG, out=willJumpLT);
+    And         (a=jumpEQ, b=aluZR, out=willJumpEQ);
+    And         (a=jumpGT, b=aluPS, out=willJumpGT);
+    Or8Way      (in[0]=willJumpLT, in[1]=willJumpEQ, in[2]=willJumpGT, out=willJump);
+    PC          (in=addrOut, load=willJump, inc=true, reset=reset, out[0..14]=pc);
+
+    Or16        (a=aluOut, b=false, out=outM);
+    Or          (a=destM, b=false, out=writeM);
+    Or16        (a=addrOut, b=false, out[0..14]=addressM);
 }

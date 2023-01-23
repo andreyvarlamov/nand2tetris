@@ -1,5 +1,5 @@
-build/assembler: build input output main.cpp
-	g++ -o build/assembler main.cpp -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
+build/assembler: build input output Assembler.cpp Parser.cpp
+	g++ -o build/assembler Assembler.cpp Parser.cpp -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
 
 build:
 	@mkdir build

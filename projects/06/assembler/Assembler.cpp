@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "Parser.h"
+
 std::vector<std::string> get_code_lines(const std::string& filename)
 {
     std::ifstream file;
@@ -50,12 +52,6 @@ void save_code_lines(const std::vector<std::string>& code_lines,
     }
 }
 
-std::vector<std::string> process_code([[maybe_unused]] const std::vector<std::string>& code_lines)
-{
-    std::vector<std::string> machine_code { };
-    return machine_code;
-}
-
 int main()
 {
     std::cout << "Starting assembler!\n";
@@ -72,11 +68,12 @@ int main()
         return 1;
     }
 
-    process_code(code_lines);
+    Parser parser { code_lines };
+    std::vector<std::string> parsed_lines = parser.parse();
 
     try
     {
-        save_code_lines(code_lines, "output/Add.hack");
+        save_code_lines(parsed_lines, "output/Add.hack");
     }
     catch (const std::exception& exception)
     {

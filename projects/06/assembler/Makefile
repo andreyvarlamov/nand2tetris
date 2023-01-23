@@ -1,8 +1,14 @@
-build/assembler: build main.cpp
+build/assembler: build input output main.cpp
 	g++ -o build/assembler main.cpp -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
 
 build:
 	@mkdir build
+
+input:
+	$(error No input folder)
+
+output:
+	@mkdir output
 
 .PHONY: run
 run: build/assembler

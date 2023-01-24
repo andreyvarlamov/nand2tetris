@@ -1,5 +1,11 @@
-build/assembler: build input output Assembler.cpp Parser.cpp
-	g++ -o build/assembler Assembler.cpp Parser.cpp -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
+build/assembler: build input output build/Assembler.o build/Parser.o
+	g++ -o build/assembler build/Assembler.o build/Parser.o -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
+
+build/Assembler.o: Assembler.cpp Command.h
+	g++ -o build/Assembler.o -c Assembler.cpp
+
+build/Parser.o: Parser.cpp Parser.h Command.h
+	g++ -o build/Parser.o -c Parser.cpp
 
 build:
 	@mkdir build

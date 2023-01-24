@@ -1,16 +1,12 @@
 #include <iostream>
+#include <string>
 
+#include "Command.h"
 #include "Parser.h"
 
-Parser::Parser(const std::vector<std::string>& code_lines)
-    : m_code_lines { code_lines }
+Command* Parser::parse(const std::string& code_line)
 {
-}
+    std::cout << "Parsing... " << code_line << '\n';
 
-std::vector<std::string> Parser::parse()
-{
-    std::cout << "Parsing...\n";
-
-    std::vector<std::string> parsed_lines { m_code_lines };
-    return parsed_lines;
+    return new Command { };
 }

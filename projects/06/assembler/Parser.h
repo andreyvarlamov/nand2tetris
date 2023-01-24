@@ -2,16 +2,15 @@
 #define PARSER_H
 
 #include <string>
-#include <vector>
+
+#include "Command.h"
 
 class Parser
 {
 private:
-    std::vector<std::string> m_code_lines;
 
 public:
-    Parser(const std::vector<std::string>& code_lines);
-    std::vector<std::string> parse();
+    static Command* parse(const std::string& code_line);
 };
 
 #endif

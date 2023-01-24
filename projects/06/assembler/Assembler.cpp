@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "Command.h"
 #include "Parser.h"
 
 std::vector<std::string> get_code_lines(const std::string& filename)
@@ -52,6 +53,27 @@ void save_code_lines(const std::vector<std::string>& code_lines,
     }
 }
 
+std::vector<Command*> parse_lines(const std::vector<std::string>& code_lines)
+{
+    std::vector<Command*> commands { };
+
+    for (std::string code_line : code_lines)
+    {
+        Command* command = Parser::parse(code_line);
+        commands.push_back(command);
+    }
+
+    return commands;
+}
+
+void delete_commands(std::vector<Command*> commands)
+{
+    for (Command* command : commands)
+    {
+        delete command;
+    }
+}
+
 int main()
 {
     std::cout << "Starting assembler!\n";
@@ -68,8 +90,11 @@ int main()
         return 1;
     }
 
-    Parser parser { code_lines };
-    std::vector<std::string> parsed_lines = parser.parse();
+    std::vector<Command*> commands { parse_lines(code_lines) };
+
+    delete_commands(commands);
+
+    std::vector<std::string> parsed_lines { code_lines };
 
     try
     {

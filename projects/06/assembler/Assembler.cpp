@@ -20,6 +20,7 @@ std::vector<std::string> get_code_lines(const std::string& filename)
         std::string line;
         while (getline(file, line))
         {
+            line.erase(line.find_last_not_of(" \n\r\t") + 1);
             code_lines.push_back(line);
         }
 
@@ -60,7 +61,10 @@ std::vector<Command*> parse_lines(const std::vector<std::string>& code_lines)
     for (std::string code_line : code_lines)
     {
         Command* command = Parser::parse(code_line);
-        commands.push_back(command);
+        if (command != nullptr)
+        {
+            commands.push_back(command);
+        }
     }
 
     return commands;
@@ -70,7 +74,11 @@ void delete_commands(std::vector<Command*> commands)
 {
     for (Command* command : commands)
     {
-        delete command;
+        if (command != nullptr)
+        {
+            delete command;
+            command = nullptr;
+        }
     }
 }
 

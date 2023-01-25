@@ -18,7 +18,7 @@ output:
 
 .PHONY: run
 run: build/assembler
-	@build/assembler
+	@build/assembler $(ARGS)
 
 .PHONY: clean
 clean:

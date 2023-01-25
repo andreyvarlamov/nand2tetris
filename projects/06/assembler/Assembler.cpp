@@ -82,15 +82,49 @@ void delete_commands(std::vector<Command*> commands)
     }
 }
 
-int main()
+std::string get_file_name(const std::string& file_path)
+{
+    std::string file_full_name { file_path.substr(file_path.find_last_of('/') + 1) };
+    std::string file_name { };
+
+    std::string::size_type dot_index { file_full_name.find_last_of('.') };
+
+    if (dot_index != std::string::npos
+        && file_full_name.substr(dot_index + 1) == "asm")
+    {
+        file_name = file_full_name.substr(0, dot_index);
+    }
+
+    return file_name;
+}
+
+int main(int argc, char* argv[])
 {
     std::cout << "Starting assembler!\n";
 
+    // Handle file name argv
+    if (argc != 2)
+    {
+        std::cerr << "Invalid number of arguments." << '\n';
+        return 1;
+    }
+
+    std::string file_path { argv[1] };
+
+    std::string file_name { get_file_name(file_path) };
+
+    if (file_name == "")
+    {
+        std::cerr << "Invalid file name." << '\n';
+        return 1;
+    }
+
+    // Get code lines from file
     std::vector<std::string> code_lines;
 
     try
     {
-        code_lines = get_code_lines("input/Add.asm");
+        code_lines = get_code_lines(file_path);
     }
     catch (const std::exception& exception)
     {
@@ -98,15 +132,17 @@ int main()
         return 1;
     }
 
+    // Parse code
     std::vector<Command*> commands { parse_lines(code_lines) };
 
     delete_commands(commands);
 
+    // Save machine code to output file
     std::vector<std::string> parsed_lines { code_lines };
 
     try
     {
-        save_code_lines(parsed_lines, "output/Add.hack");
+        save_code_lines(parsed_lines, "output/" + file_name + ".hack");
     }
     catch (const std::exception& exception)
     {

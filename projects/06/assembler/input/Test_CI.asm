@@ -1,0 +1,19 @@
+@2
+D=A
+@3
+D=D+A
+@0
+M=D
+@9000
+M=D;JMP
+laskdjf=j;ljk
+2200--  = lskjdf; lhf9
+;lskdjf
+;slkd
+...
+alskdj
+12321
+//=
+//;
+//=;
+//aa=

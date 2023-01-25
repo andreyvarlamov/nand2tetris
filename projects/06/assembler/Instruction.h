@@ -1,9 +1,9 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#ifndef INSTRUCTION_H
+#define INSTRUCTION_H
 
 #include <string>
 
-struct Command
+struct Instruction
 {
     enum class OpType
     {
@@ -14,12 +14,12 @@ struct Command
     OpType optype;
 };
 
-struct CommandA : public Command
+struct AInstruction : public Instruction
 {
     std::string value;
 };
 
-struct CommandC : public Command
+struct CInstruction : public Instruction
 {
     std::string dest;
     std::string comp;

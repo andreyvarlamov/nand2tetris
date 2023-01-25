@@ -3,14 +3,14 @@
 
 #include <string>
 
-#include "Command.h"
+#include "Instruction.h"
 
 class Parser
 {
 private:
 
 public:
-    static Command* parse(const std::string& code_line);
+    static Instruction* parse(const std::string& code_line);
 };
 
 #endif

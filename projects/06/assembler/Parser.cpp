@@ -2,10 +2,10 @@
 #include <iostream>
 #include <string>
 
-#include "Command.h"
+#include "Instruction.h"
 #include "Parser.h"
 
-Command* Parser::parse(const std::string& code_line)
+Instruction* Parser::parse(const std::string& code_line)
 {
     std::cout << code_line << '|';
 
@@ -25,24 +25,24 @@ Command* Parser::parse(const std::string& code_line)
 
     if (code_line.rfind("@", 0) == 0)
     {
-        // A-Command
+        // A-Instruction
         std::cout << " :: A. ";
         if (code_line.substr(1).find_first_not_of("0123456789 ") != std::string::npos)
         {
-            throw std::runtime_error { "Syntax error: Invalid A-Command" };
+            throw std::runtime_error { "Syntax error: Invalid A-Instruction" };
         }
         std::string value { code_line.substr(1) };
         std::cout << "value = " << value << '\n';
-        return new CommandA { Command::OpType::A, value };
+        return new AInstruction { Instruction::OpType::A, value };
     }
     else
     {
-        // If not A-Command, assume it's C-Command
+        // If not an A-Instruction, assume it's a C-Instruction
         std::cout << " :: C\n";
-        return new CommandC { Command::OpType::C, "dest", "comp", "jmp" };
+        return new CInstruction { Instruction::OpType::C, "dest", "comp", "jmp" };
     }
 
 
 
-    return new Command { };
+    return new Instruction { };
 }

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "Command.h"
+#include "Instruction.h"
 #include "Parser.h"
 
 std::vector<std::string> get_code_lines(const std::string& filename)
@@ -54,30 +54,30 @@ void save_code_lines(const std::vector<std::string>& code_lines,
     }
 }
 
-std::vector<Command*> parse_lines(const std::vector<std::string>& code_lines)
+std::vector<Instruction*> parse_lines(const std::vector<std::string>& code_lines)
 {
-    std::vector<Command*> commands { };
+    std::vector<Instruction*> instructions { };
 
     for (std::string code_line : code_lines)
     {
-        Command* command = Parser::parse(code_line);
-        if (command != nullptr)
+        Instruction* instruction = Parser::parse(code_line);
+        if (instruction != nullptr)
         {
-            commands.push_back(command);
+            instructions.push_back(instruction);
         }
     }
 
-    return commands;
+    return instructions;
 }
 
-void delete_commands(std::vector<Command*> commands)
+void delete_instructions(std::vector<Instruction*> instructions)
 {
-    for (Command* command : commands)
+    for (Instruction* instruction : instructions)
     {
-        if (command != nullptr)
+        if (instruction != nullptr)
         {
-            delete command;
-            command = nullptr;
+            delete instruction;
+            instruction = nullptr;
         }
     }
 }
@@ -133,9 +133,9 @@ int main(int argc, char* argv[])
     }
 
     // Parse code
-    std::vector<Command*> commands { parse_lines(code_lines) };
+    std::vector<Instruction*> instructions { parse_lines(code_lines) };
 
-    delete_commands(commands);
+    delete_instructions(instructions);
 
     // Save machine code to output file
     std::vector<std::string> parsed_lines { code_lines };

@@ -7,21 +7,32 @@
 #include "Instruction.h"
 #include "Parser.h"
 
+bool Parser::enable_debug = false;
+
 Instruction* Parser::parse(std::string code_line)
 {
-    std::cout << code_line << '|';
+    if (enable_debug)
+    {
+        std::cout << code_line << '|';
+    }
 
     // Skip comments
     if (code_line.rfind("//", 0) == 0)
     {
-        std::cout << " :: Comment\n";
+        if (enable_debug)
+        {
+            std::cout << " :: Comment\n";
+        }
         return nullptr;
     }
 
     // Skip empty lines
     if (code_line.empty() || code_line.find_first_not_of(' ') == std::string::npos)
     {
-        std::cout << " :: Empty\n";
+        if (enable_debug)
+        {
+            std::cout << " :: Empty\n";
+        }
         return nullptr;
     }
 
@@ -33,23 +44,34 @@ Instruction* Parser::parse(std::string code_line)
     if (code_line.rfind("@", 0) == 0)
     {
         // A-Instruction
-        std::cout << " :: A. ";
+
+        if (enable_debug)
+        {
+            std::cout << " :: A. ";
+        }
 
         std::string value { code_line.substr(1) };
 
         // Make sure there are no non-digit characters after @
         if (value.find_first_not_of("0123456789") != std::string::npos)
         {
-            throw std::runtime_error { "Syntax error: Invalid A-Instruction" };
+            throw std::runtime_error { "Parser error: Invalid A-Instruction" };
         }
 
-        std::cout << "value = " << value << '\n';
+        if (enable_debug)
+        {
+            std::cout << "value = " << value << '\n';
+        }
         return new AInstruction { Instruction::OpType::A, value };
     }
     else
     {
         // If not an A-Instruction, assume it's a C-Instruction
-        std::cout << " :: C. ";
+
+        if (enable_debug)
+        {
+            std::cout << " :: C. ";
+        }
 
         std::string dest { };
         std::string eq_rhs { };
@@ -80,12 +102,15 @@ Instruction* Parser::parse(std::string code_line)
             comp = eq_rhs;
         }
 
-        std::cout << "comp = " << comp << "; dest = " << dest << "; jmp = " << jmp << '\n';
+        if (enable_debug)
+        {
+            std::cout << "comp = " << comp << "; dest = " << dest << "; jmp = " << jmp << '\n';
+        }
 
         // If both comp and jmp are empty, there's a syntax error
         if (comp.empty() && jmp.empty())
         {
-            throw std::runtime_error { "Syntax error: Invalid C-Instruction" };
+            throw std::runtime_error { "Parser error: Invalid C-Instruction" };
         }
 
         return new CInstruction { Instruction::OpType::C, comp, dest, jmp };

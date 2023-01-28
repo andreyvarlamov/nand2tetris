@@ -8,6 +8,7 @@
 #include "Instruction.h"
 #include "Parse.h"
 #include "SyntaxError.h"
+#include "Translate.h"
 
 std::vector<std::string> get_code_lines(const std::string& filename)
 {

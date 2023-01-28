@@ -7,6 +7,7 @@
 
 #include "Instruction.h"
 #include "Parser.h"
+#include "SyntaxError.h"
 
 std::vector<std::string> get_code_lines(const std::string& filename)
 {
@@ -58,12 +59,19 @@ std::vector<Instruction*> parse_lines(const std::vector<std::string>& code_lines
 {
     std::vector<Instruction*> instructions { };
 
-    for (std::string code_line : code_lines)
+    for (std::size_t i = 0; i < code_lines.size(); ++i)
     {
-        Instruction* instruction = Parser::parse(code_line);
-        if (instruction != nullptr)
+        try
         {
-            instructions.push_back(instruction);
+            Instruction* instruction = Parser::parse(code_lines[i]);
+            if (instruction != nullptr)
+            {
+                instructions.push_back(instruction);
+            }
+        }
+        catch (const SyntaxError ex)
+        {
+            throw SyntaxError { "Line " + std::to_string(i + 1) + ": " + ex.what() };
         }
     }
 
@@ -132,8 +140,17 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // Parse code
-    std::vector<Instruction*> instructions { parse_lines(code_lines) };
+    std::vector<Instruction*> instructions { };
+    try
+    {
+        // Parse code
+        instructions = parse_lines(code_lines);
+    }
+    catch (SyntaxError ex)
+    {
+        std::cerr << "SyntaxError while parsing: " << ex.what() << '\n';
+        return 1;
+    }
 
     delete_instructions(instructions);
 

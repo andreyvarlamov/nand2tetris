@@ -6,8 +6,9 @@
 
 #include "Instruction.h"
 #include "Parser.h"
+#include "SyntaxError.h"
 
-bool Parser::enable_debug = false;
+bool Parser::enable_debug = true;
 
 Instruction* Parser::parse(std::string code_line)
 {
@@ -55,7 +56,7 @@ Instruction* Parser::parse(std::string code_line)
         // Make sure there are no non-digit characters after @
         if (value.find_first_not_of("0123456789") != std::string::npos)
         {
-            throw std::runtime_error { "Parser error: Invalid A-Instruction" };
+            throw SyntaxError { "Invalid A-Instruction" };
         }
 
         if (enable_debug)
@@ -110,7 +111,7 @@ Instruction* Parser::parse(std::string code_line)
         // If both comp and jmp are empty, there's a syntax error
         if (comp.empty() && jmp.empty())
         {
-            throw std::runtime_error { "Parser error: Invalid C-Instruction" };
+            throw SyntaxError { "Invalid C-Instruction" };
         }
 
         return new CInstruction { Instruction::OpType::C, comp, dest, jmp };

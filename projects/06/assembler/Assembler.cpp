@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Instruction.h"
-#include "Parser.h"
+#include "Parse.h"
 #include "SyntaxError.h"
 
 std::vector<std::string> get_code_lines(const std::string& filename)
@@ -52,41 +52,6 @@ void save_code_lines(const std::vector<std::string>& code_lines,
     else
     {
         throw std::runtime_error("Failed to open file to write.");
-    }
-}
-
-std::vector<Instruction*> parse_lines(const std::vector<std::string>& code_lines)
-{
-    std::vector<Instruction*> instructions { };
-
-    for (std::size_t i = 0; i < code_lines.size(); ++i)
-    {
-        try
-        {
-            Instruction* instruction = Parser::parse(code_lines[i]);
-            if (instruction != nullptr)
-            {
-                instructions.push_back(instruction);
-            }
-        }
-        catch (const SyntaxError ex)
-        {
-            throw SyntaxError { "Line " + std::to_string(i + 1) + ": " + ex.what() };
-        }
-    }
-
-    return instructions;
-}
-
-void delete_instructions(std::vector<Instruction*> instructions)
-{
-    for (Instruction* instruction : instructions)
-    {
-        if (instruction != nullptr)
-        {
-            delete instruction;
-            instruction = nullptr;
-        }
     }
 }
 
@@ -144,7 +109,7 @@ int main(int argc, char* argv[])
     try
     {
         // Parse code
-        instructions = parse_lines(code_lines);
+        instructions = Parse::parse(code_lines);
     }
     catch (SyntaxError ex)
     {
@@ -152,7 +117,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    delete_instructions(instructions);
+    Parse::delete_instructions(instructions);
 
     // Save machine code to output file
     std::vector<std::string> parsed_lines { code_lines };

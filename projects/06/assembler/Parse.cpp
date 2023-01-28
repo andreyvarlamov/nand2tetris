@@ -26,7 +26,7 @@ namespace Parse
             }
             catch (const SyntaxError ex)
             {
-                throw SyntaxError { "Line " + std::to_string(i + 1) + ": " + ex.what() };
+                throw SyntaxError { "While parsing: line " + std::to_string(i + 1) + ": " + ex.what() };
             }
         }
 
@@ -76,16 +76,17 @@ namespace Parse
 
             std::string value { code_line.substr(1) };
 
+            if (ENABLE_DEBUG)
+            {
+                std::cout << "value = " << value << '\n';
+            }
+
             // Make sure there are no non-digit characters after @
             if (value.find_first_not_of("0123456789") != std::string::npos)
             {
                 throw SyntaxError { "Invalid A-Instruction" };
             }
 
-            if (ENABLE_DEBUG)
-            {
-                std::cout << "value = " << value << '\n';
-            }
             return new AInstruction { Instruction::OpType::A, value };
         }
         else

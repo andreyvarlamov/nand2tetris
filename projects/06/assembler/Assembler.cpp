@@ -105,19 +105,16 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::vector<Instruction*> instructions { };
     try
     {
-        // Parse code
-        instructions = Parse::parse(code_lines);
+        std::vector<Instruction*> instructions { Parse::parse(code_lines) };
+        Parse::delete_instructions(instructions);
     }
     catch (SyntaxError ex)
     {
-        std::cerr << "SyntaxError while parsing: " << ex.what() << '\n';
+        std::cerr << "SyntaxError: " << ex.what() << '\n';
         return 1;
     }
-
-    Parse::delete_instructions(instructions);
 
     // Save machine code to output file
     std::vector<std::string> parsed_lines { code_lines };

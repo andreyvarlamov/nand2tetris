@@ -23,7 +23,7 @@ struct CInstruction : public Instruction
 {
     std::string dest;
     std::string comp;
-    std::string jump;
+    std::string jmp;
 };
 
 #endif

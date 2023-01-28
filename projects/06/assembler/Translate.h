@@ -7,5 +7,6 @@ namespace Translate
 {
     constexpr bool ENABLE_DEBUG = true;
     std::vector<std::string> translate(std::vector<Instruction*> instructions);
-    std::string translate_instruction(Instruction* instruction);
+    std::string translate_a_inst(AInstruction* a_inst);
+    std::string translate_c_inst(CInstruction* c_inst);
 }

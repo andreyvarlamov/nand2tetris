@@ -12,6 +12,11 @@ namespace Parse
 {
     std::vector<Instruction*> parse(const std::vector<std::string>& code_lines)
     {
+        if (ENABLE_DEBUG)
+        {
+            std::cout << "\nParsing..." << '\n';
+        }
+
         std::vector<Instruction*> instructions { };
 
         for (std::size_t i = 0; i < code_lines.size(); ++i)
@@ -143,7 +148,7 @@ namespace Parse
                 throw SyntaxError { "Invalid C-Instruction" };
             }
 
-            return new CInstruction { Instruction::OpType::C, comp, dest, jmp };
+            return new CInstruction { Instruction::OpType::C, dest, comp, jmp };
         }
 
         return new Instruction { };

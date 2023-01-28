@@ -106,9 +106,12 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    std::vector<std::string> translated_lines { code_lines };
+
     try
     {
         std::vector<Instruction*> instructions { Parse::parse(code_lines) };
+        translated_lines = Translate::translate(instructions);
         Parse::delete_instructions(instructions);
     }
     catch (SyntaxError ex)
@@ -117,12 +120,9 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // Save machine code to output file
-    std::vector<std::string> parsed_lines { code_lines };
-
     try
     {
-        save_code_lines(parsed_lines, "output/" + file_name + ".hack");
+        save_code_lines(translated_lines, "output/" + file_name + ".hack");
     }
     catch (const std::exception& exception)
     {

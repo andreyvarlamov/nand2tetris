@@ -1,3 +1,4 @@
+#include <exception>
 #include <string>
 
 class SyntaxError : public std::runtime_error

@@ -108,8 +108,13 @@ Instruction* Parser::parse(std::string code_line)
             std::cout << "comp = " << comp << "; dest = " << dest << "; jmp = " << jmp << '\n';
         }
 
-        // If both comp and jmp are empty, there's a syntax error
-        if (comp.empty() && jmp.empty())
+        bool isValid = (!dest.empty() && !comp.empty() && !jmp.empty())
+                    || ( dest.empty() && !comp.empty() && !jmp.empty())
+                    || (!dest.empty() && !comp.empty() &&  jmp.empty())
+                    || ( dest.empty() && !comp.empty() &&  jmp.empty())
+                    || ( dest.empty() &&  comp.empty() && !jmp.empty());
+
+        if (!isValid)
         {
             throw SyntaxError { "Invalid C-Instruction" };
         }

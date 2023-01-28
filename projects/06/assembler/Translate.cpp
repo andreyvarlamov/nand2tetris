@@ -1,5 +1,6 @@
 #include <bitset>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -50,32 +51,108 @@ namespace Translate
     {
         if (ENABLE_DEBUG)
         {
-            std::cout << "AInstruction. value = " << a_inst->value << '\n';
+            std::cout << "A. value = " << a_inst->value << '\n';
         }
 
         std::string b_value_str { };
         try
         {
             int value { std::stoi(a_inst->value) };
-            std::bitset<15> b_value { value };
+            std::bitset<15> b_value { static_cast<unsigned int>(value) };
             b_value_str = b_value.to_string();
         }
         catch (...)
         {
-            throw SyntaxError { "Failed to convert value of @ to int" };
+            throw SyntaxError { "A-Instruction: Failed to convert value of @." };
         }
 
         return "0" + b_value_str;
     }
+
     std::string translate_c_inst(CInstruction* c_inst)
     {
         if (ENABLE_DEBUG)
         {
-            std::cout << "CInstruction. dest = " << c_inst->dest 
+            std::cout << "C. dest = " << c_inst->dest 
                       << "; comp = " << c_inst->comp
                       << "; jmp = " << c_inst->jmp << '\n';
         }
 
-        return "1110000000000000";
+        std::map<std::string, std::string> dest_dict
+        {
+            { ""   , "000" },
+            { "M"  , "001" },
+            { "D"  , "010" },
+            { "MD" , "011" },
+            { "A"  , "100" },
+            { "AM" , "101" },
+            { "AD" , "110" },
+            { "AMD", "111" }
+        };
+
+        std::map<std::string, std::string> comp_dict
+        {
+            { ""   , "0000000" }, // when no comp it will actually do D&A,
+                                  // but it doesnt matter because the only
+                                  // sensible scenario in which comp is nothing
+                                  // is ';JMP'
+            { "0"  , "0101010" },
+            { "1"  , "0111111" },
+            { "-1" , "0111010" },
+            { "D"  , "0001100" },
+            { "A"  , "0110000" },
+            { "!D" , "0001101" },
+            { "!A" , "0110001" },
+            { "-D" , "0001111" },
+            { "-A" , "0110011" },
+            { "D+1", "0011111" },
+            { "A+1", "0110111" },
+            { "D-1", "0001110" },
+            { "A-1", "0110010" },
+            { "D+A", "0000010" },
+            { "D-A", "0010011" },
+            { "A-D", "0000111" },
+            { "D&A", "0000000" },
+            { "D|A", "0010101" },
+
+            { "M"  , "1110000" },
+            { "!M" , "1110001" },
+            { "-M" , "1110011" },
+            { "M+1", "1110111" },
+            { "M-1", "1110010" },
+            { "D+M", "1000010" },
+            { "D-M", "1010011" },
+            { "M-D", "1000111" },
+            { "D&M", "1000000" },
+            { "D|M", "1010101" }
+        };
+
+        std::map<std::string, std::string> jmp_dict
+        {
+            { ""   , "000" },
+            { "JGT", "001" },
+            { "JEQ", "010" },
+            { "JGE", "011" },
+            { "JLT", "100" },
+            { "JNE", "101" },
+            { "JLE", "110" },
+            { "JMP", "111" },
+        };
+
+        if (dest_dict.find(c_inst->dest) == dest_dict.end())
+        {
+            throw SyntaxError { "C-Instruction: Invalid dest." };
+        }
+        else if (comp_dict.find(c_inst->comp) == comp_dict.end())
+        {
+            throw SyntaxError { "C-Instruction: Invalid comp." };
+        }
+        else if (jmp_dict.find(c_inst->jmp) == jmp_dict.end())
+        {
+            throw SyntaxError { "C-Instruction: Invalid jmp." };
+        }
+
+        return "111" + comp_dict[c_inst->comp] + dest_dict[c_inst->dest]
+            + jmp_dict[c_inst->jmp];
     }
 }

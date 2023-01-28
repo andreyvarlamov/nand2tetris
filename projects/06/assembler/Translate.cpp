@@ -1,3 +1,4 @@
+#include <bitset>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -52,7 +53,19 @@ namespace Translate
             std::cout << "AInstruction. value = " << a_inst->value << '\n';
         }
 
-        return "0000000000000000";
+        std::string b_value_str { };
+        try
+        {
+            int value { std::stoi(a_inst->value) };
+            std::bitset<15> b_value { value };
+            b_value_str = b_value.to_string();
+        }
+        catch (...)
+        {
+            throw SyntaxError { "Failed to convert value of @ to int" };
+        }
+
+        return "0" + b_value_str;
     }
     std::string translate_c_inst(CInstruction* c_inst)
     {

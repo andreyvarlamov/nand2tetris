@@ -1,5 +1,5 @@
-build/assembler: build input output build/Assembler.o build/Parse.o build/Translate.o build/FileIO.o build/Preprocess.o
-	g++ -o build/assembler build/Assembler.o build/Parse.o build/Translate.o build/FileIO.o build/Preprocess.o -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
+build/assembler: build input output build/Assembler.o build/Parse.o build/Translate.o build/FileIO.o build/Preprocess.o build/SymbolTable.o
+	g++ -o build/assembler build/Assembler.o build/Parse.o build/Translate.o build/FileIO.o build/Preprocess.o build/SymbolTable.o -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
 
 build/Assembler.o: Assembler.cpp Instruction.h SyntaxError.h CodeLine.h
 	g++ -o build/Assembler.o -c Assembler.cpp
@@ -15,6 +15,9 @@ build/FileIO.o: FileIO.cpp FileIO.h CodeLine.h
 
 build/Preprocess.o: Preprocess.cpp Preprocess.h CodeLine.h
 	g++ -o build/Preprocess.o -c Preprocess.cpp
+
+build/SymbolTable.o: SymbolTable.cpp SymbolTable.h
+	g++ -o build/SymbolTable.o -c SymbolTable.cpp
 
 build:
 	@mkdir build

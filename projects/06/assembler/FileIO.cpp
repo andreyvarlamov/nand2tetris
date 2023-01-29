@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#inlucde "CodeLine.h"
+#include "CodeLine.h"
 #include "FileIO.h"
 
 namespace FileIO
@@ -13,7 +13,7 @@ namespace FileIO
         std::ifstream file;
         file.open(filename);
 
-        std::vector<std::string> code_lines { };
+        std::vector<CodeLine> code_lines { };
 
         if (file.is_open())
         {
@@ -22,7 +22,7 @@ namespace FileIO
             while (getline(file, line))
             {
                 line.erase(line.find_last_not_of(" \n\r\t") + 1);
-                code_lines.push_back(CodeLine { index, line });
+                code_lines.push_back(CodeLine { index + 1, line });
                 ++index;
             }
 

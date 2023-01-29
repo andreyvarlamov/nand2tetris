@@ -1,3 +1,6 @@
+#ifndef FILEIO_H
+#define FILEIO_H
+
 #include <string>
 #include <vector>
 
@@ -9,3 +12,5 @@ namespace FileIO
     void save_code_lines(const std::vector<std::string>& code_line,
         const std::string& filename);
 }
+
+#endif

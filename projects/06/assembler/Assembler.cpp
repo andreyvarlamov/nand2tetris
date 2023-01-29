@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::vector<std::string> translated_lines { code_lines };
+    std::vector<std::string> translated_lines { };
 
     try
     {

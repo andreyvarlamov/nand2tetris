@@ -12,6 +12,7 @@ struct Instruction
     };
 
     OpType optype;
+    int line_index;
 };
 
 struct AInstruction : public Instruction

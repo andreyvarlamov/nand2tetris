@@ -4,13 +4,14 @@
 #include <iostream>
 #include <string>
 
+#include "CodeLine.h"
 #include "Instruction.h"
 #include "Parse.h"
 #include "SyntaxError.h"
 
 namespace Parse
 {
-    std::vector<Instruction*> parse(const std::vector<std::string>& code_lines)
+    std::vector<Instruction*> parse(const std::vector<CodeLine>& code_lines)
     {
         if (ENABLE_DEBUG)
         {
@@ -19,11 +20,11 @@ namespace Parse
 
         std::vector<Instruction*> instructions { };
 
-        for (std::size_t i = 0; i < code_lines.size(); ++i)
+        for (CodeLine code_line : code_lines)
         {
             try
             {
-                Instruction* instruction = parse_line(code_lines[i]);
+                Instruction* instruction = parse_line(code_line);
                 if (instruction != nullptr)
                 {
                     instructions.push_back(instruction);
@@ -31,22 +32,23 @@ namespace Parse
             }
             catch (const SyntaxError ex)
             {
-                throw SyntaxError { "While parsing: line " + std::to_string(i + 1) + ": " + ex.what() };
+                throw SyntaxError { "While parsing: line "
+                    + std::to_string(code_line.line) + ": " + ex.what() };
             }
         }
 
         return instructions;
     }
 
-    Instruction* parse_line(std::string code_line)
+    Instruction* parse_line(CodeLine code_line)
     {
         if (ENABLE_DEBUG)
         {
-            std::cout << code_line << '|';
+            std::cout << code_line.line << ". " << code_line.code << '|';
         }
 
         // Skip comments
-        if (code_line.rfind("//", 0) == 0)
+        if (code_line.code.rfind("//", 0) == 0)
         {
             if (ENABLE_DEBUG)
             {
@@ -56,7 +58,7 @@ namespace Parse
         }
 
         // Skip empty lines
-        if (code_line.empty() || code_line.find_first_not_of(' ') == std::string::npos)
+        if (code_line.code.empty() || code_line.code.find_first_not_of(' ') == std::string::npos)
         {
             if (ENABLE_DEBUG)
             {
@@ -66,11 +68,11 @@ namespace Parse
         }
 
         // Strip the code_line of any whitespace
-        code_line.erase(remove_if(code_line.begin(), code_line.end(),
+        code_line.code.erase(remove_if(code_line.code.begin(), code_line.code.end(),
                                   [](unsigned char c){ return std::isspace(c); }
-                                 ), code_line.end());
+                                 ), code_line.code.end());
 
-        if (code_line.rfind("@", 0) == 0)
+        if (code_line.code.rfind("@", 0) == 0)
         {
             // A-Instruction
 
@@ -79,7 +81,7 @@ namespace Parse
                 std::cout << " :: A. ";
             }
 
-            std::string value { code_line.substr(1) };
+            std::string value { code_line.code.substr(1) };
 
             if (ENABLE_DEBUG)
             {
@@ -92,7 +94,7 @@ namespace Parse
                 throw SyntaxError { "Invalid A-Instruction" };
             }
 
-            return new AInstruction { Instruction::OpType::A, value };
+            return new AInstruction { Instruction::OpType::A, code_line.line, value };
         }
         else
         {
@@ -106,15 +108,15 @@ namespace Parse
             std::string dest { };
             std::string eq_rhs { };
 
-            std::string::size_type eq_index { code_line.find_first_of('=') };
+            std::string::size_type eq_index { code_line.code.find_first_of('=') };
             if (eq_index != std::string::npos)
             {
-                dest = code_line.substr(0, eq_index);
-                eq_rhs = code_line.substr(eq_index + 1);
+                dest = code_line.code.substr(0, eq_index);
+                eq_rhs = code_line.code.substr(eq_index + 1);
             }
             else
             {
-                eq_rhs = code_line;
+                eq_rhs = code_line.code;
             }
 
             std::string comp { };
@@ -148,7 +150,7 @@ namespace Parse
                 throw SyntaxError { "Invalid C-Instruction" };
             }
 
-            return new CInstruction { Instruction::OpType::C, dest, comp, jmp };
+            return new CInstruction { Instruction::OpType::C, code_line.line, dest, comp, jmp };
         }
 
         return new Instruction { };

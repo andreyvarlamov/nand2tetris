@@ -1,10 +1,10 @@
 build/assembler: build input output build/Assembler.o build/Parse.o build/Translate.o build/FileIO.o
 	g++ -o build/assembler build/Assembler.o build/Parse.o build/Translate.o build/FileIO.o -std=c++20 -g -pedantic-errors -Wall -Weffc++ -Wsign-conversion -Wextra -Werror
 
-build/Assembler.o: Assembler.cpp Instruction.h SyntaxError.h
+build/Assembler.o: Assembler.cpp Instruction.h SyntaxError.h CodeLine.h
 	g++ -o build/Assembler.o -c Assembler.cpp
 
-build/Parse.o: Parse.cpp Parse.h Instruction.h SyntaxError.h
+build/Parse.o: Parse.cpp Parse.h Instruction.h SyntaxError.h CodeLine.h
 	g++ -o build/Parse.o -c Parse.cpp
 
 build/Translate.o: Translate.cpp Translate.h Instruction.h SyntaxError.h

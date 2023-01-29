@@ -19,26 +19,28 @@ namespace Translate
 
         std::vector<std::string> translated_lines { };
 
-        for (std::size_t i = 0; i < instructions.size(); ++i)
+        for (Instruction* instruction : instructions)
         {
             std::string translated_line { };
 
             try
             {
-                if (instructions[i]->optype == Instruction::OpType::A)
+                if (instruction->optype == Instruction::OpType::A)
                 {
                     translated_line =
-                        translate_a_inst(static_cast<AInstruction*>(instructions[i]));
+                        translate_a_inst(static_cast<AInstruction*>(instruction));
                 }
                 else
                 {
                     translated_line =
-                        translate_c_inst(static_cast<CInstruction*>(instructions[i]));
+                        translate_c_inst(static_cast<CInstruction*>(instruction));
                 }
             }
             catch (SyntaxError ex)
             {
-                throw SyntaxError { "While translating: instruction " + std::to_string(i + 1) + ": " + ex.what() };
+                throw SyntaxError { "While translating: instruction "
+                    + std::to_string(instruction->line_index)
+                    + ": " + ex.what() };
             }
 
             translated_lines.push_back(translated_line);

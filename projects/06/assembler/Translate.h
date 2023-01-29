@@ -1,3 +1,6 @@
+#ifndef TRANSLATE_H
+#define TRANSLATE_H
+
 #include <string>
 #include <vector>
 
@@ -10,3 +13,5 @@ namespace Translate
     std::string translate_a_inst(AInstruction* a_inst);
     std::string translate_c_inst(CInstruction* c_inst);
 }
+
+#endif

@@ -53,7 +53,7 @@ namespace Translate
     {
         if (ENABLE_DEBUG)
         {
-            std::cout << "A. value = " << a_inst->value << '\n';
+            std::cout << a_inst->line_index << ".\t(A) value = " << a_inst->value;
         }
 
         std::string b_value_str { };
@@ -68,16 +68,23 @@ namespace Translate
             throw SyntaxError { "A-Instruction: Failed to convert value of @." };
         }
 
-        return "0" + b_value_str;
+        std::string binary_code { "0" + b_value_str };
+
+        if (ENABLE_DEBUG)
+        {
+            std::cout << " => " << binary_code << '\n';
+        }
+
+        return binary_code;
     }
 
     std::string translate_c_inst(CInstruction* c_inst)
     {
         if (ENABLE_DEBUG)
         {
-            std::cout << "C. dest = " << c_inst->dest 
+            std::cout << c_inst->line_index << ".\t(C) dest = " << c_inst->dest
                       << "; comp = " << c_inst->comp
-                      << "; jmp = " << c_inst->jmp << '\n';
+                      << "; jmp = " << c_inst->jmp;
         }
 
         std::map<std::string, std::string> dest_dict
@@ -154,7 +161,16 @@ namespace Translate
             throw SyntaxError { "C-Instruction: Invalid jmp." };
         }
 
-        return "111" + comp_dict[c_inst->comp] + dest_dict[c_inst->dest]
-            + jmp_dict[c_inst->jmp];
+        std::string binary_code { "111" + comp_dict[c_inst->comp]
+            + dest_dict[c_inst->dest]
+            + jmp_dict[c_inst->jmp] };
+
+
+        if (ENABLE_DEBUG)
+        {
+            std::cout << " => " << binary_code << '\n';
+        }
+
+        return binary_code;
     }
 }

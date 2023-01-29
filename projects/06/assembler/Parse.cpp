@@ -1,5 +1,3 @@
-#include <algorithm>
-#include <cctype>
 #include <exception>
 #include <iostream>
 #include <string>
@@ -44,33 +42,8 @@ namespace Parse
     {
         if (ENABLE_DEBUG)
         {
-            std::cout << code_line.line << ". " << code_line.code << '|';
+            std::cout << code_line.line << ".\t" << code_line.code << '|';
         }
-
-        // Skip comments
-        if (code_line.code.rfind("//", 0) == 0)
-        {
-            if (ENABLE_DEBUG)
-            {
-                std::cout << " :: Comment\n";
-            }
-            return nullptr;
-        }
-
-        // Skip empty lines
-        if (code_line.code.empty() || code_line.code.find_first_not_of(' ') == std::string::npos)
-        {
-            if (ENABLE_DEBUG)
-            {
-                std::cout << " :: Empty\n";
-            }
-            return nullptr;
-        }
-
-        // Strip the code_line of any whitespace
-        code_line.code.erase(remove_if(code_line.code.begin(), code_line.code.end(),
-                                  [](unsigned char c){ return std::isspace(c); }
-                                 ), code_line.code.end());
 
         if (code_line.code.rfind("@", 0) == 0)
         {

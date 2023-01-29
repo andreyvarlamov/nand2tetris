@@ -9,6 +9,7 @@
 #include "FileIO.h"
 #include "Instruction.h"
 #include "Parse.h"
+#include "Preprocess.h"
 #include "SyntaxError.h"
 #include "Translate.h"
 
@@ -66,7 +67,8 @@ int main(int argc, char* argv[])
 
     try
     {
-        std::vector<Instruction*> instructions { Parse::parse(code_lines) };
+        std::vector<CodeLine> preprocessed_lines { Preprocess::preprocess(code_lines) };
+        std::vector<Instruction*> instructions { Parse::parse(preprocessed_lines) };
         translated_lines = Translate::translate(instructions);
         Parse::delete_instructions(instructions);
     }

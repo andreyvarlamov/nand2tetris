@@ -38,7 +38,7 @@ namespace Translate
             }
             catch (SyntaxError ex)
             {
-                throw SyntaxError { "While translating: instruction "
+                throw SyntaxError { "While translating: line "
                     + std::to_string(instruction->line_index)
                     + ": " + ex.what() };
             }

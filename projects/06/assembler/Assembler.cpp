@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
     }
     catch (SyntaxError ex)
     {
-        std::cerr << "SyntaxError: " << ex.what() << '\n';
+        std::cerr << "\n\nSyntaxError: " << ex.what() << "\n\n";
         return 1;
     }
 

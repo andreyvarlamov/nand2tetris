@@ -5,56 +5,12 @@
 #include <string>
 #include <vector>
 
+#include "CodeLine.h"
+#include "FileIO.h"
 #include "Instruction.h"
 #include "Parse.h"
 #include "SyntaxError.h"
 #include "Translate.h"
-
-std::vector<std::string> get_code_lines(const std::string& filename)
-{
-    std::ifstream file;
-    file.open(filename);
-
-    std::vector<std::string> code_lines { };
-
-    if (file.is_open())
-    {
-        std::string line;
-        while (getline(file, line))
-        {
-            line.erase(line.find_last_not_of(" \n\r\t") + 1);
-            code_lines.push_back(line);
-        }
-
-        file.close();
-    }
-    else
-    {
-        throw std::runtime_error("Failed to open file to read.");
-    }
-
-    return code_lines;
-}
-
-void save_code_lines(const std::vector<std::string>& code_lines,
-        const std::string& filename)
-{
-    std::ofstream file;
-    file.open(filename);
-    if (file.is_open())
-    {
-        for (std::string line : code_lines)
-        {
-            file << line << '\n';
-        }
-
-        file.close();
-    }
-    else
-    {
-        throw std::runtime_error("Failed to open file to write.");
-    }
-}
 
 std::string get_file_name(const std::string& file_path)
 {
@@ -94,11 +50,11 @@ int main(int argc, char* argv[])
     }
 
     // Get code lines from file
-    std::vector<std::string> code_lines;
+    std::vector<CodeLine> code_lines;
 
     try
     {
-        code_lines = get_code_lines(file_path);
+        code_lines = FileIO::get_code_lines(file_path);
     }
     catch (const std::exception& exception)
     {
@@ -122,7 +78,7 @@ int main(int argc, char* argv[])
 
     try
     {
-        save_code_lines(translated_lines, "output/" + file_name + ".hack");
+        FileIO::save_code_lines(translated_lines, "output/" + file_name + ".hack");
     }
     catch (const std::exception& exception)
     {

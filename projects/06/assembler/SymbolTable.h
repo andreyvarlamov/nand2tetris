@@ -11,6 +11,7 @@ private:
     std::map<std::string, int> m_symbols;
 public:
     SymbolTable();
+    void push_label(std::string label, int line_num);
 };
 
 #endif

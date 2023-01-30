@@ -2,6 +2,7 @@
 #include <string>
 
 #include "SymbolTable.h"
+#include "SyntaxError.h"
 
 SymbolTable::SymbolTable()
 {
@@ -35,4 +36,14 @@ SymbolTable::SymbolTable()
     };
 
     current_ram_pointer = 16;
+}
+
+void SymbolTable::push_label(std::string label, int line_num)
+{
+    if (m_symbols.contains(label))
+    {
+        throw SyntaxError { "Symbol Table already contains symbol: " + label + "." };
+    }
+
+    map[label] = line_num;
 }

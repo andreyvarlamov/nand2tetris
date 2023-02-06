@@ -1,3 +1,4 @@
+#include <iostream>
 #include <map>
 #include <string>
 
@@ -40,10 +41,20 @@ SymbolTable::SymbolTable()
 
 void SymbolTable::push_label(std::string label, int line_num)
 {
-    if (m_symbols.contains(label))
+    if (m_symbols.find(label) != m_symbols.end())
     {
         throw SyntaxError { "Symbol Table already contains symbol: " + label + "." };
     }
 
-    map[label] = line_num;
+    m_symbols[label] = line_num;
+}
+
+void SymbolTable::print()
+{
+    std::cout << "\nPrinting Symbol Table\n";
+
+    for (auto symbol : m_symbols)
+    {
+        std::cout << symbol.first << ": " << symbol.second << '\n';
+    }
 }

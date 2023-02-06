@@ -1,7 +1,7 @@
 #ifndef SYNTAXERROR_H
 #define SYNTAXERROR_H
 
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 class SyntaxError : public std::runtime_error

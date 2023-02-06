@@ -12,6 +12,7 @@ private:
 public:
     SymbolTable();
     void push_label(std::string label, int line_num);
+    void print();
 };
 
 #endif

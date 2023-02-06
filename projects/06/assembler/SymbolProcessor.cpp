@@ -2,6 +2,7 @@
 
 // TODO: Remove
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -11,6 +12,7 @@
 
 std::vector<CodeLine> SymbolProcessor::process_symbols(const std::vector<CodeLine>& code_lines)
 {
+    std::cout << "Processing symbols" << '\n';
     std::vector<CodeLine> no_labels { };
     std::vector<CodeLine> no_symbols { };
 
@@ -20,8 +22,7 @@ std::vector<CodeLine> SymbolProcessor::process_symbols(const std::vector<CodeLin
     }
     catch (SyntaxError ex)
     {
-        throw SyntaxError { "While scanning labels: line "
-            + std::to_string(code_lines.line) + ": " + ex.what() };
+        throw SyntaxError { "While scanning labels: " + std::string { ex.what() } };
     }
 
     try
@@ -30,15 +31,10 @@ std::vector<CodeLine> SymbolProcessor::process_symbols(const std::vector<CodeLin
     }
     catch (SyntaxError ex)
     {
-        throw SyntaxError { "While replacing symbols: line "
-            + std::to_string(code_lines.line) + ": " + ex.what() };
+        throw SyntaxError { "While replacing symbols: " + std::string { ex.what() } };
     }
 
-    std::cout << "\nPrinting Symbol Table\n"
-    for (const std::map<std::string, int>::iterator& const& symbol : m_symbols)
-    {
-        std::cout << symbol.first << ": " << symbol.second << '\n';
-    }
+    m_symbol_table.print();
 
     return no_symbols;
 }
@@ -54,7 +50,7 @@ std::vector<CodeLine> SymbolProcessor::scan_labels(const std::vector<CodeLine>& 
         std::string::size_type last_open_parenthesis { code_line.code.find_last_of('(') };
         std::string::size_type first_closed_parenthesis { code_line.code.find_first_of(')') };
         std::string::size_type first_non_digit { code_line.code.find_first_not_of("0123456789()") };
-        if (first_open_parenthesis != 0)
+        if (first_open_parenthesis == 0)
         {
             if (last_open_parenthesis == 0
                 && first_closed_parenthesis == code_line.code.length() - 1
@@ -67,8 +63,11 @@ std::vector<CodeLine> SymbolProcessor::scan_labels(const std::vector<CodeLine>& 
                 // TODO: Syntax Error if repeated labels
                 // TODO: Syntax Error if label is on the last line
             }
-
-            throw SyntaxError { "Invalid label" };
+            else
+            {
+                throw SyntaxError { "Line " + std::to_string(code_line.line)
+                    + ": Invalid label" };
+            }
         }
         else
         {

@@ -14,7 +14,7 @@ namespace Preprocess
         for (CodeLine code_line : code_lines)
         {
             // Skip comments
-            if (code_line.code.rfind("//", 0) == 0)
+            if (code_line.code.find("//") == 0)
             {
                 continue;
             }
@@ -25,12 +25,16 @@ namespace Preprocess
                 continue;
             }
 
-            std::string stripped_line { code_line.code };
-            stripped_line.erase(remove_if(stripped_line.begin(), stripped_line.end(),
-                                      [](unsigned char c){ return std::isspace(c); }
-                                     ), stripped_line.end());
+            // Remove comments from code lines
+            std::string resultant_line { code_line.code };
 
-            preprocessed_lines.push_back(CodeLine { code_line.line, stripped_line });
+            resultant_line = resultant_line.substr(0, resultant_line.find("//"));
+
+            resultant_line.erase(remove_if(resultant_line.begin(), resultant_line.end(),
+                                      [](unsigned char c){ return std::isspace(c); }
+                                     ), resultant_line.end());
+
+            preprocessed_lines.push_back(CodeLine { code_line.line, resultant_line });
         }
 
         return preprocessed_lines;

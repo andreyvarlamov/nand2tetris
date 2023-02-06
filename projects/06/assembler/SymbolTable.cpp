@@ -1,7 +1,9 @@
+#include <iostream>
 #include <map>
 #include <string>
 
 #include "SymbolTable.h"
+#include "SyntaxError.h"
 
 SymbolTable::SymbolTable()
 {
@@ -35,4 +37,42 @@ SymbolTable::SymbolTable()
     };
 
     current_ram_pointer = 16;
+}
+
+void SymbolTable::push_label(std::string label, int line_num)
+{
+    if (m_symbols.find(label) != m_symbols.end())
+    {
+        throw SyntaxError { "Symbol Table already contains symbol: " + label + "." };
+    }
+
+    m_symbols[label] = line_num;
+}
+
+int SymbolTable::get_or_assign_symbol(std::string symbol)
+{
+    int symbol_value { };
+
+    if (m_symbols.find(symbol) != m_symbols.end())
+    {
+         symbol_value = m_symbols[symbol];
+    }
+    else
+    {
+        m_symbols[symbol] = current_ram_pointer;
+        symbol_value = current_ram_pointer;
+        ++current_ram_pointer;
+    }
+
+    return symbol_value;
+}
+
+void SymbolTable::print()
+{
+    std::cout << "\nPrinting Symbol Table\n";
+
+    for (auto symbol : m_symbols)
+    {
+        std::cout << symbol.first << ": " << symbol.second << '\n';
+    }
 }

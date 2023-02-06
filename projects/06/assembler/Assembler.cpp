@@ -10,6 +10,7 @@
 #include "Instruction.h"
 #include "Parse.h"
 #include "Preprocess.h"
+#include "SymbolProcessor.h"
 #include "SyntaxError.h"
 #include "Translate.h"
 
@@ -68,7 +69,9 @@ int main(int argc, char* argv[])
     try
     {
         std::vector<CodeLine> preprocessed_lines { Preprocess::preprocess(code_lines) };
-        std::vector<Instruction*> instructions { Parse::parse(preprocessed_lines) };
+        SymbolProcessor symbolProcessor { };
+        std::vector<CodeLine> no_symbols_lines { symbolProcessor.process_symbols(preprocessed_lines) };
+        std::vector<Instruction*> instructions { Parse::parse(no_symbols_lines) };
         translated_lines = Translate::translate(instructions);
         Parse::delete_instructions(instructions);
     }

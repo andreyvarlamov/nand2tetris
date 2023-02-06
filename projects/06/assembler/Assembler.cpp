@@ -81,9 +81,11 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    std::string output_file_name { "output/" + file_name + ".hack" };
+    std::cout << "Assembly done! Saving to " + output_file_name << '\n';
     try
     {
-        FileIO::save_code_lines(translated_lines, "output/" + file_name + ".hack");
+        FileIO::save_code_lines(translated_lines, output_file_name);
     }
     catch (const std::exception& exception)
     {

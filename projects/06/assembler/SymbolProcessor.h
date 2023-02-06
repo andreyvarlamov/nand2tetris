@@ -6,7 +6,7 @@
 #include "CodeLine.h"
 #include "SymbolTable.h"
 
-constexpr bool ENABLE_DEBUG = true;
+constexpr bool ENABLE_DEBUG = false;
 
 class SymbolProcessor
 {

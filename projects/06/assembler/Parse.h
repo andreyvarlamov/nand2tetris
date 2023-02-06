@@ -9,7 +9,7 @@
 
 namespace Parse
 {
-    constexpr bool ENABLE_DEBUG = true;
+    constexpr bool ENABLE_DEBUG = false;
     std::vector<Instruction*> parse(const std::vector<CodeLine>& code_lines);
     Instruction* parse_line(CodeLine code_line);
     void delete_instructions(std::vector<Instruction*> instructions);

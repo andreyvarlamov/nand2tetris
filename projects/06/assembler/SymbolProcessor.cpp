@@ -12,7 +12,11 @@
 
 std::vector<CodeLine> SymbolProcessor::process_symbols(const std::vector<CodeLine>& code_lines)
 {
-    std::cout << "Processing symbols" << '\n';
+    if (ENABLE_DEBUG)
+    {
+        std::cout << "\nProcessing symbols..." << '\n';
+    }
+
     std::vector<CodeLine> no_labels { };
     std::vector<CodeLine> no_symbols { };
 
@@ -34,13 +38,30 @@ std::vector<CodeLine> SymbolProcessor::process_symbols(const std::vector<CodeLin
         throw SyntaxError { "While replacing symbols: " + std::string { ex.what() } };
     }
 
-    m_symbol_table.print();
+    if (ENABLE_DEBUG)
+    {
+        m_symbol_table.print();
+    }
+
+    if (ENABLE_DEBUG)
+    {
+        std::cout << "\nPrinting symbolless code" << '\n';
+        for (CodeLine code_line : no_labels)
+        {
+            std::cout << code_line.line << ": " << code_line.code << '\n';
+        }
+    }
 
     return no_symbols;
 }
 
 std::vector<CodeLine> SymbolProcessor::scan_labels(const std::vector<CodeLine>& code_lines)
 {
+    if (ENABLE_DEBUG)
+    {
+        std::cout << "\nScanning labels..." << '\n';
+    }
+
     std::vector<CodeLine> no_labels { };
     int no_label_line_index { };
 
@@ -81,6 +102,11 @@ std::vector<CodeLine> SymbolProcessor::scan_labels(const std::vector<CodeLine>& 
 
 std::vector<CodeLine> SymbolProcessor::replace_symbols(const std::vector<CodeLine>& code_lines)
 {
+    if (ENABLE_DEBUG)
+    {
+        std::cout << "\nReplacing symbols..." << '\n';
+    }
+
     std::vector<CodeLine> no_symbols { };
 
     return no_symbols;

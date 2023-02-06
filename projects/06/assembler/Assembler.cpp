@@ -71,9 +71,9 @@ int main(int argc, char* argv[])
         std::vector<CodeLine> preprocessed_lines { Preprocess::preprocess(code_lines) };
         SymbolProcessor symbolProcessor { };
         std::vector<CodeLine> no_symbols_lines { symbolProcessor.process_symbols(preprocessed_lines) };
-//        std::vector<Instruction*> instructions { Parse::parse(no_symbols_lines) };
-//        translated_lines = Translate::translate(instructions);
-//        Parse::delete_instructions(instructions);
+        std::vector<Instruction*> instructions { Parse::parse(no_symbols_lines) };
+        translated_lines = Translate::translate(instructions);
+        Parse::delete_instructions(instructions);
     }
     catch (SyntaxError ex)
     {

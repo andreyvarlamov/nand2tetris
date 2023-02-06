@@ -12,6 +12,8 @@ private:
 public:
     SymbolTable();
     void push_label(std::string label, int line_num);
+    int assign_and_push_symbol(std::string symbol);
+    int get_or_assign_symbol(std::string symbol);
     void print();
 };
 

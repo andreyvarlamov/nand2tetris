@@ -46,7 +46,7 @@ std::vector<CodeLine> SymbolProcessor::process_symbols(const std::vector<CodeLin
     if (ENABLE_DEBUG)
     {
         std::cout << "\nPrinting symbolless code" << '\n';
-        for (CodeLine code_line : no_labels)
+        for (CodeLine code_line : no_symbols)
         {
             std::cout << code_line.line << ": " << code_line.code << '\n';
         }
@@ -108,6 +108,45 @@ std::vector<CodeLine> SymbolProcessor::replace_symbols(const std::vector<CodeLin
     }
 
     std::vector<CodeLine> no_symbols { };
+
+    for (CodeLine code_line : code_lines)
+    {
+        if (code_line.code.find_first_of('@') == 0)
+        {
+            // Further analyze all A-Instructions
+            std::string a_value { code_line.code.substr(1) };
+
+            // That have a non-digit character
+            // TODO: Should be just alpha characters
+            if (a_value.find_first_not_of("0123456789") != std::string::npos)
+            {
+                if (a_value.find_first_not_of("012345689") == 0)
+                {
+                    // If it starts with non-digit character, that's a symbol
+                    int symbol_value { m_symbol_table.get_or_assign_symbol(a_value) };
+                    std::string no_symbols_code { '@' + std::to_string(symbol_value) };
+                    no_symbols.push_back(CodeLine { code_line.line, no_symbols_code });
+                }
+                else
+                {
+                    // If it starts with a digit, that's not valid
+                    throw SyntaxError { "Line " + std::to_string(code_line.line)
+                        + ": Variable name cannot start with a digit." };
+                }
+            }
+            else
+            {
+                // All A-Instructions that don't non-digit characters can be
+                // added with no changes
+                no_symbols.push_back(code_line);
+            }
+        }
+        else
+        {
+            // Non A-Instructions can be added with no changes
+            no_symbols.push_back(code_line);
+        }
+    }
 
     return no_symbols;
 }

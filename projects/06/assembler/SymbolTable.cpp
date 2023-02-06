@@ -49,6 +49,24 @@ void SymbolTable::push_label(std::string label, int line_num)
     m_symbols[label] = line_num;
 }
 
+int SymbolTable::get_or_assign_symbol(std::string symbol)
+{
+    int symbol_value { };
+
+    if (m_symbols.find(symbol) != m_symbols.end())
+    {
+         symbol_value = m_symbols[symbol];
+    }
+    else
+    {
+        m_symbols[symbol] = current_ram_pointer;
+        symbol_value = current_ram_pointer;
+        ++current_ram_pointer;
+    }
+
+    return symbol_value;
+}
+
 void SymbolTable::print()
 {
     std::cout << "\nPrinting Symbol Table\n";
